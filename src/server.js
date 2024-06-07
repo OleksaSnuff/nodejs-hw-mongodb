@@ -3,9 +3,9 @@ import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import checkEnvFor from './utils/env.js';
-import { getAllContacts, getContactByID } from './services/contacts.js';
-import mongoose from 'mongoose';
-
+import contactsRouter from './routers/contacts.js';
+import notFoundMiddleware from './middleware/notFoundMiddleware.js';
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 dotenv.config();
 
 const setupServer = async () => {
@@ -13,7 +13,12 @@ const setupServer = async () => {
 
   const app = express();
 
-  app.use(express.json());
+  app.use(
+    express.json({
+      type: ['application/json', 'application/vnd.api+json'],
+      limit: '100kb',
+    }),
+  );
   app.use(cors());
   app.use(
     pino({
@@ -22,68 +27,11 @@ const setupServer = async () => {
       },
     }),
   );
+  app.use(contactsRouter);
 
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+  app.use('*', notFoundMiddleware);
 
-    res.status(200).json({
-      status: res.statusCode,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  });
-
-  // app.delete('/contacts/:contactId', async (req, res) => {
-  //   const contactId = req.params.contactId;
-  //   try {
-  //     await deleteContactByID(contactId);
-
-  //     res.status(200).json({
-  //       message: `Successfully deleted contact with id ${contactId}!`,
-  //     });
-  //   } catch (error) {
-  //     res.status(404).json({
-  //       message: `Not found contact with id ${contactId}!!`,
-  //     });
-  //   }
-  // });
-
-  app.get('/contacts/:contactId', async (req, res) => {
-    const contactId = req.params.contactId;
-
-    if (!mongoose.Types.ObjectId.isValid(contactId)) {
-      return res.status(404).json({
-        status: res.statusCode,
-        message: `Not valid id format ${contactId}!`,
-      });
-    }
-    try {
-      const contact = await getContactByID(contactId);
-
-      if (!contact) {
-        return res.status(404).json({
-          status: res.statusCode,
-          message: `Not found contact with id ${contactId}!`,
-        });
-      }
-      res.status(200).json({
-        status: res.statusCode,
-        message: `Successfully found contact with id ${contactId}!`,
-        data: contact,
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: res.statusCode,
-        message: `Server error`,
-      });
-    }
-  });
-
-  app.use('*', (req, res) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
+  app.use(errorHandlerMiddleware);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
