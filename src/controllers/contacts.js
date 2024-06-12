@@ -68,22 +68,28 @@ export const upsertContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
-  if (!result) {
+  const { contact } = await updateContact(contactId, req.body);
+  if (!contact) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
   res.status(200).json({
     status: res.statusCode,
     message: 'Successfully patched a contact!',
-    data: result,
+    contact,
   });
 };
 
-export const deleteContactByIDController = async (req, res, next) => {
+export const deleteContactByIDController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await deleteContactByID(contactId);
 
-  if (!contact) next(createHttpError(404, 'Contact not found'));
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    return res.status(404).json({
+      status: res.statusCode,
+      message: `Contact not found ${contactId}!`,
+    });
+  }
+
+  await deleteContactByID(contactId);
   res.status(204).send();
 };
