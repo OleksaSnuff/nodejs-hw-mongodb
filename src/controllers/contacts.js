@@ -46,7 +46,7 @@ export const createContactController = async (req, res) => {
 
   res.status(201).json({
     status: res.statusCode,
-    message: 'Successfully created a student!',
+    message: 'Successfully created a contact!',
     data: newContact,
   });
 };
@@ -68,19 +68,20 @@ export const upsertContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const { contact } = await updateContact(contactId, req.body);
-  if (!contact) {
+  const result = await updateContact(contactId, req.body);
+
+  if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
   res.status(200).json({
     status: res.statusCode,
     message: 'Successfully patched a contact!',
-    contact,
+    result,
   });
 };
 
-export const deleteContactByIDController = async (req, res) => {
+export const deleteContactByIDController = async (req, res, next) => {
   const { contactId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(contactId)) {
@@ -90,6 +91,11 @@ export const deleteContactByIDController = async (req, res) => {
     });
   }
 
-  await deleteContactByID(contactId);
+  const contact = await deleteContactByID(contactId);
+
+  if (!contact) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
   res.status(204).send();
 };
