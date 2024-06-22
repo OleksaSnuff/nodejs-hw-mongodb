@@ -3,15 +3,17 @@ import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import checkEnvFor from './utils/env.js';
-import contactsRouter from './routers/contacts.js';
+import rootRouter from './routers/index.js';
 import notFoundMiddleware from './middleware/notFoundMiddleware.js';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const setupServer = async () => {
   const PORT = checkEnvFor('PORT', 3000);
 
   const app = express();
+  app.use(cookieParser());
 
   app.use(
     express.json({
@@ -27,7 +29,7 @@ const setupServer = async () => {
       },
     }),
   );
-  app.use(contactsRouter);
+  app.use(rootRouter);
 
   app.use('*', notFoundMiddleware);
 
