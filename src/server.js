@@ -7,6 +7,7 @@ import rootRouter from './routers/index.js';
 import notFoundMiddleware from './middleware/notFoundMiddleware.js';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from './constants/index.js';
 dotenv.config();
 
 const setupServer = async () => {
@@ -14,7 +15,7 @@ const setupServer = async () => {
 
   const app = express();
   app.use(cookieParser());
-
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use(
     express.json({
       type: ['application/json', 'application/vnd.api+json'],
