@@ -17,6 +17,7 @@ const setupServer = async () => {
   const app = express();
   app.use(cookieParser());
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
   app.use(
     express.json({
       type: ['application/json', 'application/vnd.api+json'],
@@ -36,9 +37,6 @@ const setupServer = async () => {
   app.use('*', notFoundMiddleware);
 
   app.use(errorHandlerMiddleware);
-
-  app.use('/uploads', express.static(UPLOAD_DIR));
-  app.use('/api-docs', swaggerDocs());
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
