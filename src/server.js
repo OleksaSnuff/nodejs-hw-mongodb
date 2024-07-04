@@ -8,6 +8,7 @@ import notFoundMiddleware from './middleware/notFoundMiddleware.js';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './middleware/swaggerDocs.js';
 dotenv.config();
 
 const setupServer = async () => {
@@ -35,6 +36,9 @@ const setupServer = async () => {
   app.use('*', notFoundMiddleware);
 
   app.use(errorHandlerMiddleware);
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
