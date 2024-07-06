@@ -1,6 +1,6 @@
 tags:
   - Contacts
-summary: Patch student by id.
+summary: Patch contacts by id.
 operationId: patchContactByID
 description: 'Patch contact by Id'
 security:
@@ -42,7 +42,7 @@ requestBody:
           photo:
             description: 'Contact photo'
             type: string
-            example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+            format: binary
 responses:
   '200':
     description: 'Contact update'

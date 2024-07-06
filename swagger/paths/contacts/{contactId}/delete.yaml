@@ -1,6 +1,6 @@
 tags:
   - Contacts
-summary: Delete student by id.
+summary: Delete contacts by id.
 operationId: deleteContactByID
 description: 'Delete contact by Id'
 security:

@@ -1,6 +1,6 @@
 tags:
   - Contacts
-summary: Get student by id.
+summary: Get contacts by id.
 operationId: getContactByID
 description: 'Get contact by Id'
 security:

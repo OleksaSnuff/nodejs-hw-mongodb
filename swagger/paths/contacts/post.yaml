@@ -1,6 +1,6 @@
 tags:
   - Contacts
-summary: Create contact
+summary: Create contacts
 operationId: createContact
 description: 'Create a contact with payload'
 security:
@@ -14,10 +14,6 @@ requestBody:
           - name
           - phoneNumber
         properties:
-          userId:
-            description: 'Contact id'
-            type: string
-            example: 65e4decdd286b30065d54af9
           name:
             description: 'Contact name'
             type: string
