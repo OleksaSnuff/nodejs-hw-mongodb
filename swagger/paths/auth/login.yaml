@@ -21,7 +21,7 @@ requestBody:
           password:
             description: 'User password'
             type: string
-            example: '7895654564'
+            example: '12345678'
 responses:
   '200':
     description: 'Successfully login user!'

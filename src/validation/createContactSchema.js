@@ -38,7 +38,7 @@ export const createContactSchema = Joi.object({
     .max(20)
     .messages(messages.phoneNumber)
     .required(),
-  email: Joi.string().min(3).max(20).email().messages(messages.email),
+  email: Joi.string().min(3).max(30).email().messages(messages.email),
   isFavourite: Joi.boolean().default(false).messages(messages.isFavourite),
   contactType: Joi.string()
     .min(4)
