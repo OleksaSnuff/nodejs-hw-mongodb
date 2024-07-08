@@ -6,12 +6,9 @@ const parseType = (type) => {
   if (isKnownType) return type;
 };
 
-const parseIsFavourite = (isFavourite) => {
-  const isString = typeof isFavourite === 'string';
-  if (!isString) return;
-  const isCorrectFavourite = ['true', 'false'].includes(isFavourite);
-  if (isCorrectFavourite) return Boolean(isFavourite);
-  return;
+const parseIsFavourite = (favourite) => {
+  const isFavourite = favourite == 'true' ? true : false;
+  return isFavourite;
 };
 
 export const parseFilterParams = (query) => {
